@@ -9,17 +9,21 @@ const readFileContents = (cb) => {
    let currentElfCount = 0;
    let elves = [];
     rl.on('line', (line) => {
-        if (line.length === 0) {
-            currentElfCount++;
-            elves.push({
-                id: currentElfCount,
-                caloryCount: currentCaloryCount
-            })
-            currentCaloryCount = 0;
-            return;
+        if (line.length > 0) {
+            currentCaloryCount = currentCaloryCount + Number.parseInt(line, 10);
+            return
         }
 
-        currentCaloryCount = currentCaloryCount + Number.parseInt(line, 10);
+        // We have now read all the data for an elf
+        // add it to the array
+        // reset/update any tracking variables
+        currentElfCount++;
+        elves.push({
+            id: currentElfCount,
+            caloryCount: currentCaloryCount
+        })
+      
+        currentCaloryCount = 0;
     });
 
     rl.on('close', () => {
@@ -49,9 +53,4 @@ const getResults = (elves) => {
     topThreeElves.forEach(printElf);
 }
 
-readFileContents(getResults);
-
-
-
-
-   
+readFileContents(getResults); 
