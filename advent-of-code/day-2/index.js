@@ -7,7 +7,7 @@ let rl = readline.createInterface({input: readStream});
 let myScorePartOneLogic = 0;
 let myScorePartTwoLogic = 0;
 
-const PointsForOutcome = {
+const pointsForOutcome = {
     lose: 0,
     draw: 3,
     win: 6,
@@ -54,7 +54,7 @@ const availableMoves = {
 
 const partOneLogic = (theirMove, yourMove) => {
     const outcome = outcomes[theirMove][yourMove];
-    myScorePartOneLogic += (pointsForHand[yourMove] + PointsForOutcome[outcome]);
+    myScorePartOneLogic += (pointsForHand[yourMove] + pointsForOutcome[outcome]);
 }
 
 const partTwoLogic = (theirMove, yourMove) => {
@@ -66,7 +66,7 @@ const partTwoLogic = (theirMove, yourMove) => {
         }
     }
 
-    myScorePartTwoLogic += (pointsForHand[correctHand] + PointsForOutcome[outcome]);
+    myScorePartTwoLogic += (pointsForHand[correctHand] + pointsForOutcome[outcome]);
 }
 
 rl.on('line', (line) => {
