@@ -18,6 +18,16 @@ class Stack {
         return this.items.shift();
     }
 
+    removeMany(number) {
+        const copy = this.items.slice();
+        this.items = this.items.slice(number, this.items.length);
+        return copy.slice(0, number);
+    }
+
+    putMany(items) {
+        this.items = [...items, ...this.items];
+    }
+
     peek() {
         return this.items[this.items.length - 1];
     }
@@ -43,10 +53,7 @@ const createStacks = (data) => {
 
 const createStack = (stackData) => {
     const stack = new Stack();
-    stackData.items.forEach(element => {
-        stack.unShift(element);
-    }); 
-
+    stack.putMany(stackData.items);
     return stack;
 }
 
@@ -64,16 +71,8 @@ const moveCrate = (amount, from, to) => {
     const source = stacks[from];
     const destination = stacks[to];
 
-    const items = [];
-
-    for(let i = 0; i < amount; i++) {
-        items.push(source.shift());
-    }
-
-    for(let i = 0; i < items.length; i++) {
-        destination.unShift(items[i]);
-    }
-
+    const removed = source.removeMany(amount);
+    destination.putMany(removed.reverse());
 }
 
 const getTopCrates = () => {
@@ -93,8 +92,9 @@ const stacks = createStacks(json);
 
 const instructions = fs.readFileSync('instructions.txt', 'utf8').split('\n');
 instructions.forEach((instruction) => {
-   const {amount, from, to} = interpretInstruction(instruction);
+  const {amount, from, to} = interpretInstruction(instruction);
    moveCrate(amount, from, to);
+ 
 });
 const topCrates = getTopCrates();
 console.log(topCrates);
