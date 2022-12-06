@@ -67,15 +67,18 @@ const interpretInstruction = (instruction) => {
     }
 }
 
-const moveCrate = (amount, from, to) => {
+const moveCrate = (stacks, amount, from, to, shoudReverse = true) => {
     const source = stacks[from];
     const destination = stacks[to];
 
     const removed = source.removeMany(amount);
-    destination.putMany(removed.reverse());
+
+    const items = shoudReverse ? removed.reverse() : removed;
+
+    destination.putMany(items);
 }
 
-const getTopCrates = () => {
+const getTopCrates = (stacks) => {
     const items = [];
 
     for(const stack in stacks) {
@@ -87,16 +90,27 @@ const getTopCrates = () => {
 
 const rawData = fs.readFileSync('crates.json', 'utf8');
 const json = JSON.parse(rawData);
-
-const stacks = createStacks(json);
-
 const instructions = fs.readFileSync('instructions.txt', 'utf8').split('\n');
-instructions.forEach((instruction) => {
-  const {amount, from, to} = interpretInstruction(instruction);
-   moveCrate(amount, from, to);
- 
-});
-const topCrates = getTopCrates();
-console.log(topCrates);
+
+const partOne = () => {
+    const newStack = createStacks(json);
+    instructions.forEach((instruction) => {
+        const {amount, from, to} = interpretInstruction(instruction);
+        moveCrate(newStack, amount, from, to, true);
+    });
+   return getTopCrates(newStack);
+}
+
+const partTwo = () => {
+    const newStack = createStacks(json);
+    instructions.forEach((instruction) => {
+        const {amount, from, to} = interpretInstruction(instruction);
+        moveCrate(newStack, amount, from, to, false);
+    });
+   return getTopCrates(newStack);
+}
+
+console.log(partOne());
+console.log(partTwo());
 
 
